@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CX Account Plan — Template</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --panel: #ffffff;
+    --ink: #1a2332;
+    --ink-2: #4a5568;
+    --muted: #8a94a6;
+    --line: #e3e7ee;
+    --accent: #1f4788;
+    --accent-soft: #eaf0fb;
+    --good: #2d9c5f;
+    --warn: #d97706;
+    --bad: #c53030;
+    --neutral: #64748b;
+    --shadow: 0 1px 3px rgba(20,30,50,.06), 0 1px 2px rgba(20,30,50,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ===== Top bar ===== */
+  .topbar {
+    background: var(--ink);
+    color: #fff;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar .brand {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 600; letter-spacing: .3px;
+  }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: linear-gradient(135deg, #4a90d9, #1f4788);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .topbar .actions { display: flex; gap: 8px; }
+  .btn {
+    background: transparent; color: #fff;
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 7px 12px; border-radius: 6px;
+    font-size: 13px; cursor: pointer;
+    transition: all .15s ease;
+  }
+  .btn:hover { background: rgba(255,255,255,.1); }
+  .btn.primary {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .btn.primary:hover { background: #2a5aa0; }
+  .btn.danger { color: #ffb4b4; border-color: rgba(255,180,180,.4); }
+
+  /* ===== Layout ===== */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 56px);
+  }
+  .sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 20px 0;
+    position: sticky; top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .sidebar h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin: 18px 20px 8px;
+    font-weight: 600;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    color: var(--ink-2);
+    border-left: 3px solid transparent;
+    font-size: 13.5px;
+    transition: all .12s ease;
+  }
+  .nav-item:hover { background: var(--accent-soft); color: var(--accent); }
+  .nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  .nav-item .ico {
+    width: 18px; text-align: center; font-size: 14px;
+  }
+
+  .main { padding: 28px 36px 80px; max-width: 1280px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 20px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .page-header h1 {
+    margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.2px;
+  }
+  .page-header .sub {
+    color: var(--muted); font-size: 13px; margin-top: 4px;
+  }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .card h3 {
+    margin: 0 0 14px; font-size: 15px; font-weight: 600;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h3 .pill {
+    font-size: 11px; padding: 2px 8px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent); font-weight: 500;
+  }
+
+  /* ===== Snapshot grid ===== */
+  .snapshot {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .snapshot .card { margin-bottom: 0; }
+
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .8px;
+    color: var(--muted); font-weight: 600; margin-bottom: 4px;
+  }
+  .field .value, .editable {
+    border: 1px solid transparent;
+    padding: 6px 8px; border-radius: 5px;
+    min-height: 24px; font-size: 13.5px;
+    color: var(--ink); cursor: text;
+    transition: all .12s ease;
+    background: transparent;
+    width: 100%;
+    display: block;
+  }
+  .editable:hover {
+    border-color: var(--line); background: #fafbfc;
+  }
+  .editable:focus {
+    outline: none; border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .editable[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted);
+    font-style: italic;
+  }
+  textarea.editable {
+    font-family: inherit;
+    resize: vertical; min-height: 60px;
+  }
+
+  /* ===== Tables ===== */
+  table.grid {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.grid th {
+    text-align: left; padding: 10px 10px;
+    background: #fafbfc;
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: .6px; color: var(--muted);
+    border-bottom: 2px solid var(--line);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  table.grid td {
+    padding: 8px 6px; border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.grid tr:hover td { background: #fafbfc; }
+  table.grid td .editable {
+    padding: 5px 7px; min-height: 22px;
+  }
+  .row-actions { width: 32px; text-align: center; }
+  .icon-btn {
+    background: transparent; border: none;
+    color: var(--muted); cursor: pointer;
+    padding: 4px 6px; border-radius: 4px;
+    font-size: 14px;
+  }
+  .icon-btn:hover { background: #fee; color: var(--bad); }
+
+  .table-actions {
+    margin-top: 12px;
+    display: flex; gap: 8px;
+  }
+  .btn-add {
+    background: #fff; border: 1px dashed var(--line);
+    color: var(--accent); padding: 8px 14px;
+    border-radius: 6px; cursor: pointer;
+    font-size: 13px; font-weight: 500;
+  }
+  .btn-add:hover { background: var(--accent-soft); border-color: var(--accent); border-style: solid; }
+
+  /* ===== Selects in tables ===== */
+  select.cell {
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 5px 7px; border-radius: 5px;
+    font-size: 13px; color: var(--ink);
+    width: 100%; cursor: pointer;
+    font-family: inherit;
+  }
+  select.cell:hover { border-color: var(--line); background: #fafbfc; }
+  select.cell:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+  /* ===== Tags / pills for influence etc. ===== */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; font-weight: 500;
+  }
+  .tag-high { background: #fee2e2; color: #c53030; }
+  .tag-mod { background: #fef3c7; color: #92400e; }
+  .tag-low { background: #e0e7ef; color: #475569; }
+  .tag-good { background: #d1fae5; color: #065f46; }
+  .tag-neutral { background: #e0e7ef; color: #475569; }
+
+  /* ===== SWOT ===== */
+  .swot {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .swot .quad {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .swot .quad h3 {
+    margin: 0 0 12px;
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--line);
+  }
+  .swot .quad.s h3 { color: #065f46; }
+  .swot .quad.w h3 { color: #92400e; }
+  .swot .quad.o h3 { color: var(--accent); }
+  .swot .quad.t h3 { color: #c53030; }
+  .swot .swot-row {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #fafbfc;
+  }
+  .swot .swot-row label {
+    font-size: 10px; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; letter-spacing: .6px;
+  }
+  .swot .swot-row .editable {
+    font-size: 13px; padding: 4px 0;
+  }
+
+  /* ===== Engagement matrix ===== */
+  .engagement-table { overflow-x: auto; }
+  .engagement-table table { min-width: 100%; }
+  .engagement-table .month-cell {
+    text-align: center; min-width: 50px;
+  }
+  .engagement-table .month-cell .editable {
+    text-align: center; font-size: 12px; padding: 4px;
+  }
+
+  /* ===== Notes timeline ===== */
+  .timeline {
+    position: relative; padding-left: 30px;
+  }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 8px; top: 6px; bottom: 0;
+    width: 2px; background: var(--line);
+  }
+  .timeline-entry {
+    position: relative;
+    margin-bottom: 18px;
+    background: #fafbfc;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .timeline-entry::before {
+    content: ''; position: absolute;
+    left: -27px; top: 18px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--panel);
+  }
+  .timeline-entry .te-head {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 6px;
+  }
+  .timeline-entry input.te-date {
+    font-size: 12px; font-weight: 600; color: var(--accent);
+    border: 1px solid transparent; background: transparent;
+    padding: 4px 6px; border-radius: 5px;
+    font-family: inherit;
+  }
+  .timeline-entry input.te-date:hover { border-color: var(--line); background: #fff; }
+
+  /* ===== Empty state ===== */
+  .empty {
+    text-align: center; padding: 40px 20px;
+    color: var(--muted);
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    background: #fafbfc;
+  }
+
+  /* ===== Tip banner ===== */
+  .tip {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px; color: var(--ink-2);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: static; height: auto;
+      display: flex; overflow-x: auto;
+      padding: 8px;
+    }
+    .sidebar h4 { display: none; }
+    .nav-item {
+      border-left: none; border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+    .nav-item.active { border-bottom-color: var(--accent); border-left-color: transparent; }
+    .snapshot { grid-template-columns: 1fr; }
+    .swot { grid-template-columns: 1fr; }
+    .main { padding: 18px; }
+  }
+
+  /* ===== Print ===== */
+  @media print {
+    .topbar, .sidebar, .table-actions, .row-actions, .btn-add, .icon-btn { display: none !important; }
+    .layout { display: block; }
+    .main { padding: 0; }
+    .page { display: block !important; page-break-after: always; }
+    .card, .swot .quad { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">P</div>
+    <div>
+      <div>Pritchard CX — Account Plan</div>
+      <div style="font-size:11px; opacity:.7; font-weight:400;">Client Experience · Retention Strategy Template</div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="exportData()">Export JSON</button>
+    <button class="btn" onclick="importData()">Import</button>
+    <button class="btn" onclick="window.print()">Print / PDF</button>
+    <button class="btn danger" onclick="resetAll()">Reset</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <h4>Account</h4>
+    <div class="nav-item active" data-page="overview"><span class="ico">●</span> Overview</div>
+    <div class="nav-item" data-page="stakeholders"><span class="ico">●</span> Stakeholder Matrix</div>
+    <div class="nav-item" data-page="engagement"><span class="ico">●</span> Engagement Plan</div>
+    <h4>Insights</h4>
+    <div class="nav-item" data-page="voc"><span class="ico">●</span> VOC Needs</div>
+    <div class="nav-item" data-page="swot"><span class="ico">●</span> SWOT Analysis</div>
+    <div class="nav-item" data-page="growth"><span class="ico">●</span> Growth Opportunities</div>
+    <h4>Activity</h4>
+    <div class="nav-item" data-page="notes"><span class="ico">●</span> Notes & Meetings</div>
+    <h4>Reference</h4>
+    <div class="nav-item" data-page="legend"><span class="ico">●</span> Legend / Key</div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ===== OVERVIEW ===== -->
+    <section class="page active" id="page-overview">
+      <div class="page-header">
+        <div>
+          <h1><span class="editable" data-key="account_name" data-placeholder="Account Name">Account Name</span></h1>
+          <div class="sub">Client snapshot · last reviewed <span class="editable" data-key="last_reviewed" data-placeholder="MM/DD/YYYY"></span></div>
+        </div>
+        <div style="font-size:12px; color: var(--muted);">Click any field to edit · changes save automatically</div>
+      </div>
+
+      <div class="tip">
+        <strong>How to use this template:</strong> Replace placeholder text in each section. Add/remove rows in tables with the buttons. Use <em>Export JSON</em> to save the filled plan as a backup or to share. One template per client account.
+      </div>
+
+      <div class="snapshot">
+
+        <div class="card">
+          <h3>Pritchard Team</h3>
+          <div class="field">
+            <label>Project Manager (PM)</label>
+            <span class="editable" data-key="team_pm" data-placeholder="Name"></span>
+          </div>
+          <div class="field">
+            <label>General Manager (GM)</label>
+            <span class="editable" data-key="team_gm" data-placeholder="Name"></span>
+          </div>
+          <div class="field">
+            <label>Director of Operations (D.O.)</label>
+            <span class="editable" data-key="team_do" data-placeholder="Name"></span>
+          </div>
+          <div class="field">
+            <label>Vice President (V.P.)</label>
+            <span class="editable" data-key="team_vp" data-placeholder="Name"></span>
+          </div>
+          <div class="field">
+            <label>CX Lead</label>
+            <span class="editable" data-key="team_cx" data-placeholder="Name"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Client Profile</h3>
+          <div class="field">
+            <label>Industry / Sector</label>
+            <span class="editable" data-key="client_industry" data-placeholder="e.g., Life Sciences, Aerospace"></span>
+          </div>
+          <div class="field">
+            <label>Website</label>
+            <span class="editable" data-key="client_website" data-placeholder="https://..."></span>
+          </div>
+          <div class="field">
+            <label>Headquarters / Address</label>
+            <span class="editable" data-key="client_address" data-placeholder="Street, City, State"></span>
+          </div>
+          <div class="field">
+            <label>Locations Serviced</label>
+            <span class="editable" data-key="client_locations" data-placeholder="e.g., Fort Worth, TX · Atlanta, GA"></span>
+          </div>
+          <div class="field">
+            <label>Contract Start / Renewal</label>
+            <span class="editable" data-key="client_contract" data-placeholder="Started MM/YYYY · Renews MM/YYYY"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Strategic Focus</h3>
+          <div class="field">
+            <label>Business Focus</label>
+            <textarea class="editable" data-key="focus_business" data-placeholder="What is the client's core business and current direction?"></textarea>
+          </div>
+          <div class="field">
+            <label>Social Impact / Sustainability</label>
+            <textarea class="editable" data-key="focus_sustainability" data-placeholder="ESG goals, sustainability targets, community initiatives"></textarea>
+          </div>
+          <div class="field">
+            <label>Leadership Priorities</label>
+            <textarea class="editable" data-key="focus_leadership" data-placeholder="Key initiatives the client's leadership is driving"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Account Health <span class="pill">Updated quarterly</span></h3>
+        <div class="snapshot" style="margin-bottom:0;">
+          <div>
+            <div class="field">
+              <label>Primary Objective</label>
+              <span class="editable" data-key="health_objective" data-placeholder="e.g., Retention, Expansion, Recovery"></span>
+            </div>
+            <div class="field">
+              <label>Current Status</label>
+              <span class="editable" data-key="health_status" data-placeholder="Green / Yellow / Red — and why"></span>
+            </div>
+          </div>
+          <div>
+            <div class="field">
+              <label>Top Risks</label>
+              <textarea class="editable" data-key="health_risks" data-placeholder="What could threaten retention?"></textarea>
+            </div>
+          </div>
+          <div>
+            <div class="field">
+              <label>Top Wins / Momentum</label>
+              <textarea class="editable" data-key="health_wins" data-placeholder="Recent wins, positive signals"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== STAKEHOLDERS ===== -->
+    <section class="page" id="page-stakeholders">
+      <div class="page-header">
+        <div>
+          <h1>Stakeholder Matrix</h1>
+          <div class="sub">Map every contact's influence, role, and your relationship with them. See the Legend tab for definitions.</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="overflow-x: auto;">
+          <table class="grid" id="stakeholder-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Job Title</th>
+                <th>Department</th>
+                <th>Buying Influence</th>
+                <th>Level of Influence</th>
+                <th>Decision Authority</th>
+                <th>Strategic Role</th>
+                <th>Quality of Relationship</th>
+                <th>How They View Us (1–5)</th>
+                <th>Reports To</th>
+                <th>LinkedIn</th>
+                <th class="row-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="stakeholder-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-actions">
+        <button class="btn-add" onclick="addStakeholder()">+ Add Stakeholder</button>
+      </div>
+    </section>
+
+    <!-- ===== ENGAGEMENT ===== -->
+    <section class="page" id="page-engagement">
+      <div class="page-header">
+        <div>
+          <h1>Engagement Plan</h1>
+          <div class="sub">Cadence, ownership, and monthly touchpoints for each key stakeholder.</div>
+        </div>
+      </div>
+
+      <div class="card engagement-table" style="padding: 0; overflow: hidden;">
+        <div style="overflow-x: auto;">
+          <table class="grid" id="engagement-table">
+            <thead>
+              <tr>
+                <th rowspan="2">Stakeholder</th>
+                <th rowspan="2">Role/Buying Influence</th>
+                <th rowspan="2">Pritchard Counterpart</th>
+                <th rowspan="2">Engagement Type</th>
+                <th rowspan="2">Frequency</th>
+                <th colspan="12" style="text-align:center; border-right: 2px solid var(--line);">Touchpoints (Target / Completed)</th>
+                <th rowspan="2" class="row-actions"></th>
+              </tr>
+              <tr>
+                <th class="month-cell">Jan</th><th class="month-cell">Feb</th><th class="month-cell">Mar</th>
+                <th class="month-cell">Apr</th><th class="month-cell">May</th><th class="month-cell">Jun</th>
+                <th class="month-cell">Jul</th><th class="month-cell">Aug</th><th class="month-cell">Sep</th>
+                <th class="month-cell">Oct</th><th class="month-cell">Nov</th><th class="month-cell">Dec</th>
+              </tr>
+            </thead>
+            <tbody id="engagement-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-actions">
+        <button class="btn-add" onclick="addEngagement()">+ Add Engagement Row</button>
+      </div>
+
+      <div class="card" style="margin-top: 18px;">
+        <h3>Engagement Categories</h3>
+        <div style="font-size: 13px; color: var(--ink-2);">
+          <strong>Strategic Priorities</strong> · Quarterly Business Review (QBR), aligned with client's annual objectives.<br>
+          <strong>Monthly Connect</strong> · Operational check-in covering performance, issues, and priorities.<br>
+          <strong>Client Appreciation / Social</strong> · Relationship-building moments outside formal reviews.<br>
+          <strong>Sales Call · Insights / HWD</strong> · Sharing market insights, "How We're Doing" updates.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== VOC ===== -->
+    <section class="page" id="page-voc">
+      <div class="page-header">
+        <div>
+          <h1>Voice of the Client (VOC)</h1>
+          <div class="sub">Track client-stated needs, expectations, and how Pritchard is responding.</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="overflow-x: auto;">
+          <table class="grid" id="voc-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Client Contact</th>
+                <th>VOC Need</th>
+                <th>Expectation</th>
+                <th>KPI</th>
+                <th>Action Taken</th>
+                <th>Owner</th>
+                <th>Follow-Up</th>
+                <th class="row-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="voc-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-actions">
+        <button class="btn-add" onclick="addVoc()">+ Add VOC Entry</button>
+      </div>
+    </section>
+
+    <!-- ===== SWOT ===== -->
+    <section class="page" id="page-swot">
+      <div class="page-header">
+        <div>
+          <h1>SWOT Analysis</h1>
+          <div class="sub">Strengths, Weaknesses, Opportunities, Threats — for the client's industry, paired with Pritchard's response.</div>
+        </div>
+      </div>
+
+      <div class="swot">
+        <div class="quad s">
+          <h3>● Strengths <span style="color:var(--muted); font-weight:400; font-size:12px; margin-left:auto;">Industry + Pritchard fit</span></h3>
+          <div id="swot-s"></div>
+          <button class="btn-add" style="width:100%;" onclick="addSwot('s')">+ Add Strength</button>
+        </div>
+        <div class="quad w">
+          <h3>● Weaknesses</h3>
+          <div id="swot-w"></div>
+          <button class="btn-add" style="width:100%;" onclick="addSwot('w')">+ Add Weakness</button>
+        </div>
+        <div class="quad o">
+          <h3>● Opportunities</h3>
+          <div id="swot-o"></div>
+          <button class="btn-add" style="width:100%;" onclick="addSwot('o')">+ Add Opportunity</button>
+        </div>
+        <div class="quad t">
+          <h3>● Threats</h3>
+          <div id="swot-t"></div>
+          <button class="btn-add" style="width:100%;" onclick="addSwot('t')">+ Add Threat</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GROWTH ===== -->
+    <section class="page" id="page-growth">
+      <div class="page-header">
+        <div>
+          <h1>Growth Opportunities</h1>
+          <div class="sub">Expansion plays — services, locations, or scope to pursue with this client.</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="overflow-x: auto;">
+          <table class="grid" id="growth-table">
+            <thead>
+              <tr>
+                <th>Opportunity</th>
+                <th>Service / Scope</th>
+                <th>Est. Value</th>
+                <th>Stage</th>
+                <th>Champion (Internal)</th>
+                <th>Sponsor (Client)</th>
+                <th>Next Step</th>
+                <th>Target Date</th>
+                <th class="row-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="growth-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-actions">
+        <button class="btn-add" onclick="addGrowth()">+ Add Opportunity</button>
+      </div>
+    </section>
+
+    <!-- ===== NOTES ===== -->
+    <section class="page" id="page-notes">
+      <div class="page-header">
+        <div>
+          <h1>Notes & Meeting Log</h1>
+          <div class="sub">QBRs, internal account reviews, debriefs, key conversations.</div>
+        </div>
+      </div>
+
+      <div class="timeline" id="notes-timeline"></div>
+      <div class="table-actions">
+        <button class="btn-add" onclick="addNote()">+ Add Entry</button>
+      </div>
+    </section>
+
+    <!-- ===== LEGEND ===== -->
+    <section class="page" id="page-legend">
+      <div class="page-header">
+        <div>
+          <h1>Legend / Key</h1>
+          <div class="sub">Definitions used across the Stakeholder Matrix and Engagement Plan.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Buying Influence (BI)</h3>
+        <div style="font-size: 13.5px; color: var(--ink-2); line-height: 1.8;">
+          <strong>Economic Buyer (EB)</strong> · Controls budget; final say on spend.<br>
+          <strong>User Buyer (UB)</strong> · Day-to-day user of our service; judges performance directly.<br>
+          <strong>Technical Buyer (TB)</strong> · Gatekeeper — can rule us out, can't say yes alone.<br>
+          <strong>Coach (C)</strong> · Internal advocate inside the client org.<br>
+          <strong>Gatekeeper (G)</strong> · Controls access to other buyers.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Level of Influence (LI)</h3>
+        <div style="font-size: 13.5px; color: var(--ink-2); line-height: 1.8;">
+          <strong>High</strong> · Drives decisions and shapes outcomes.<br>
+          <strong>Moderate</strong> · Has meaningful input.<br>
+          <strong>Low</strong> · Limited input.<br>
+          <strong>None</strong> · No influence on the decision.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Decision Authority (DA)</h3>
+        <div style="font-size: 13.5px; color: var(--ink-2); line-height: 1.8;">
+          <strong>Final Decision-Maker</strong> · Signs off.<br>
+          <strong>Key Decision Influencer</strong> · Their opinion carries weight.<br>
+          <strong>Recommender</strong> · Suggests, doesn't decide.<br>
+          <strong>Low / No Authority</strong> · Minimal sway over outcome.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Strategic Role (SR)</h3>
+        <div style="font-size: 13.5px; color: var(--ink-2); line-height: 1.8;">
+          <strong>Sponsor</strong> · Champions Pritchard internally.<br>
+          <strong>Key Player</strong> · Important but not advocating.<br>
+          <strong>Coach</strong> · Helps us navigate the org.<br>
+          <strong>Anti-Sponsor</strong> · Working against us.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Quality of Relationship (QR)</h3>
+        <div style="font-size: 13.5px; color: var(--ink-2); line-height: 1.8;">
+          <strong>Trusted Ally</strong> · Strong, reciprocal.<br>
+          <strong>Supportive</strong> · Generally positive.<br>
+          <strong>Neutral</strong> · No meaningful relationship yet.<br>
+          <strong>Skeptical</strong> · Some doubt or distance.<br>
+          <strong>Adversarial</strong> · Active friction.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>How They View Us (HV)</h3>
+        <div style="font-size: 13.5px; color: var(--ink-2); line-height: 1.8;">
+          <strong>5 — Organizational Partner</strong> · Strategic, embedded.<br>
+          <strong>4 — Business Partner</strong> · Trusted, beyond a vendor.<br>
+          <strong>3 — Exceeds Expectations</strong> · Strong vendor.<br>
+          <strong>2 — Meets Expectations</strong> · Acceptable vendor.<br>
+          <strong>1 — Does Not Meet</strong> · At risk.
+        </div>
+      </div>
+
+      <div class="card" style="background: #fffbea; border-color: #fde68a;">
+        <h3>Tip · Update Cadence</h3>
+        <div style="font-size: 13.5px; color: var(--ink-2);">
+          Refresh stakeholder matrix and VOC after every QBR. Update engagement touchpoints monthly.
+          The "last reviewed" field on Overview is your audit trail.
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ============== STATE & STORAGE ==============
+  const STORAGE_KEY = 'pritchard_cx_account_plan_v1';
+
+  let state = loadState();
+
+  function defaultState() {
+    return {
+      fields: {},
+      stakeholders: [],
+      engagements: [],
+      voc: [],
+      swot: { s: [], w: [], o: [], t: [] },
+      growth: [],
+      notes: []
+    };
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return Object.assign(defaultState(), JSON.parse(raw));
+    } catch (e) {}
+    return defaultState();
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      console.warn('Could not save state:', e);
+    }
+  }
+
+  // ============== NAV ==============
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const target = item.dataset.page;
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById('page-' + target).classList.add('active');
+      window.scrollTo(0, 0);
+    });
+  });
+
+  // ============== EDITABLE FIELDS (top-level) ==============
+  function bindFieldEditables() {
+    document.querySelectorAll('.editable[data-key]').forEach(el => {
+      const key = el.dataset.key;
+      if (state.fields[key] !== undefined) {
+        if (el.tagName === 'TEXTAREA') el.value = state.fields[key];
+        else el.textContent = state.fields[key];
+      }
+      const handler = () => {
+        const val = el.tagName === 'TEXTAREA' ? el.value : el.textContent;
+        state.fields[key] = val;
+        saveState();
+      };
+      if (el.tagName === 'TEXTAREA') {
+        el.addEventListener('input', handler);
+      } else {
+        el.setAttribute('contenteditable', 'true');
+        el.addEventListener('input', handler);
+        el.addEventListener('blur', handler);
+      }
+    });
+  }
+
+  // ============== STAKEHOLDERS ==============
+  const STAKE_FIELDS = ['name', 'title', 'dept', 'buying_influence', 'level_influence', 'decision_authority', 'strategic_role', 'relationship', 'view_score', 'reports_to', 'linkedin'];
+
+  const STAKE_OPTIONS = {
+    buying_influence: ['', 'Economic Buyer', 'User Buyer', 'Technical Buyer', 'Coach', 'Gatekeeper'],
+    level_influence: ['', 'High', 'Moderate', 'Low', 'None'],
+    decision_authority: ['', 'Final Decision-Maker', 'Key Decision Influencer', 'Recommender', 'Low Authority', 'No Authority'],
+    strategic_role: ['', 'Sponsor', 'Key Player', 'Coach', 'Anti-Sponsor'],
+    relationship: ['', 'Trusted Ally', 'Supportive', 'Neutral', 'Skeptical', 'Adversarial'],
+    view_score: ['', '5', '4', '3', '2', '1']
+  };
+
+  function renderStakeholders() {
+    const tbody = document.getElementById('stakeholder-body');
+    tbody.innerHTML = '';
+    if (state.stakeholders.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="12"><div class="empty">No stakeholders yet. Add the first contact below to start mapping the account.</div></td></tr>';
+      return;
+    }
+    state.stakeholders.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      STAKE_FIELDS.forEach(f => {
+        const td = document.createElement('td');
+        if (STAKE_OPTIONS[f]) {
+          const sel = document.createElement('select');
+          sel.className = 'cell';
+          STAKE_OPTIONS[f].forEach(opt => {
+            const o = document.createElement('option');
+            o.value = opt; o.textContent = opt || '—';
+            if ((row[f] || '') === opt) o.selected = true;
+            sel.appendChild(o);
+          });
+          sel.addEventListener('change', () => { row[f] = sel.value; saveState(); });
+          td.appendChild(sel);
+        } else {
+          const div = document.createElement('div');
+          div.className = 'editable';
+          div.contentEditable = 'true';
+          div.textContent = row[f] || '';
+          div.addEventListener('input', () => { row[f] = div.textContent; saveState(); });
+          td.appendChild(div);
+        }
+        tr.appendChild(td);
+      });
+      const actionTd = document.createElement('td');
+      actionTd.className = 'row-actions';
+      actionTd.innerHTML = '<button class="icon-btn" title="Remove">×</button>';
+      actionTd.querySelector('button').addEventListener('click', () => {
+        if (confirm('Remove this stakeholder?')) {
+          state.stakeholders.splice(idx, 1);
+          saveState(); renderStakeholders();
+        }
+      });
+      tr.appendChild(actionTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addStakeholder() {
+    const blank = {};
+    STAKE_FIELDS.forEach(f => blank[f] = '');
+    state.stakeholders.push(blank);
+    saveState();
+    renderStakeholders();
+  }
+
+  // ============== ENGAGEMENTS ==============
+  const ENG_FIELDS = ['stakeholder', 'role', 'counterpart', 'engagement_type', 'frequency'];
+  const MONTHS = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+
+  function renderEngagements() {
+    const tbody = document.getElementById('engagement-body');
+    tbody.innerHTML = '';
+    if (state.engagements.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="18"><div class="empty">No engagement rows yet. Add a row for each key stakeholder you\'ll engage on a regular cadence.</div></td></tr>';
+      return;
+    }
+    state.engagements.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      ENG_FIELDS.forEach(f => {
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+        div.className = 'editable';
+        div.contentEditable = 'true';
+        div.textContent = row[f] || '';
+        div.addEventListener('input', () => { row[f] = div.textContent; saveState(); });
+        td.appendChild(div);
+        tr.appendChild(td);
+      });
+      MONTHS.forEach(m => {
+        const td = document.createElement('td');
+        td.className = 'month-cell';
+        const div = document.createElement('div');
+        div.className = 'editable';
+        div.contentEditable = 'true';
+        div.textContent = row[m] || '';
+        div.dataset.placeholder = '–';
+        div.addEventListener('input', () => { row[m] = div.textContent; saveState(); });
+        td.appendChild(div);
+        tr.appendChild(td);
+      });
+      const actionTd = document.createElement('td');
+      actionTd.className = 'row-actions';
+      actionTd.innerHTML = '<button class="icon-btn" title="Remove">×</button>';
+      actionTd.querySelector('button').addEventListener('click', () => {
+        if (confirm('Remove this engagement row?')) {
+          state.engagements.splice(idx, 1);
+          saveState(); renderEngagements();
+        }
+      });
+      tr.appendChild(actionTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addEngagement() {
+    const blank = {};
+    ENG_FIELDS.forEach(f => blank[f] = '');
+    MONTHS.forEach(m => blank[m] = '');
+    state.engagements.push(blank);
+    saveState();
+    renderEngagements();
+  }
+
+  // ============== VOC ==============
+  const VOC_FIELDS = ['date', 'contact', 'need', 'expectation', 'kpi', 'action', 'owner', 'followup'];
+
+  function renderVoc() {
+    const tbody = document.getElementById('voc-body');
+    tbody.innerHTML = '';
+    if (state.voc.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9"><div class="empty">No VOC entries yet. Capture client-stated needs as they come up.</div></td></tr>';
+      return;
+    }
+    state.voc.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      VOC_FIELDS.forEach(f => {
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+        div.className = 'editable';
+        div.contentEditable = 'true';
+        div.textContent = row[f] || '';
+        div.addEventListener('input', () => { row[f] = div.textContent; saveState(); });
+        td.appendChild(div);
+        tr.appendChild(td);
+      });
+      const actionTd = document.createElement('td');
+      actionTd.className = 'row-actions';
+      actionTd.innerHTML = '<button class="icon-btn" title="Remove">×</button>';
+      actionTd.querySelector('button').addEventListener('click', () => {
+        if (confirm('Remove this VOC entry?')) {
+          state.voc.splice(idx, 1);
+          saveState(); renderVoc();
+        }
+      });
+      tr.appendChild(actionTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addVoc() {
+    const blank = {};
+    VOC_FIELDS.forEach(f => blank[f] = '');
+    state.voc.push(blank);
+    saveState();
+    renderVoc();
+  }
+
+  // ============== SWOT ==============
+  function renderSwot() {
+    ['s','w','o','t'].forEach(quad => {
+      const container = document.getElementById('swot-' + quad);
+      container.innerHTML = '';
+      const labelMap = {
+        s: ['Industry/Client Strength', 'Pritchard Strength', 'Objective & Strategy'],
+        w: ['Industry/Client Weakness', 'Pritchard Response', 'Objective & Strategy'],
+        o: ['Industry/Client Opportunity', 'Pritchard Position', 'Objective & Strategy'],
+        t: ['Industry/Client Threat', 'Pritchard Risk', 'Objective & Strategy']
+      };
+      state.swot[quad].forEach((row, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'swot-row';
+        ['industry','pritchard','strategy'].forEach((field, i) => {
+          const lbl = document.createElement('label');
+          lbl.textContent = labelMap[quad][i];
+          const ta = document.createElement('textarea');
+          ta.className = 'editable';
+          ta.value = row[field] || '';
+          ta.style.minHeight = '40px';
+          ta.addEventListener('input', () => { row[field] = ta.value; saveState(); });
+          wrap.appendChild(lbl);
+          wrap.appendChild(ta);
+        });
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'icon-btn';
+        removeBtn.style.cssText = 'float:right; margin-top:-4px;';
+        removeBtn.innerHTML = '×';
+        removeBtn.title = 'Remove';
+        removeBtn.addEventListener('click', () => {
+          if (confirm('Remove this entry?')) {
+            state.swot[quad].splice(idx, 1);
+            saveState(); renderSwot();
+          }
+        });
+        wrap.appendChild(removeBtn);
+        container.appendChild(wrap);
+      });
+    });
+  }
+
+  function addSwot(quad) {
+    state.swot[quad].push({ industry: '', pritchard: '', strategy: '' });
+    saveState();
+    renderSwot();
+  }
+
+  // ============== GROWTH ==============
+  const GROWTH_FIELDS = ['opportunity', 'service', 'value', 'stage', 'champion', 'sponsor', 'next_step', 'target_date'];
+
+  function renderGrowth() {
+    const tbody = document.getElementById('growth-body');
+    tbody.innerHTML = '';
+    if (state.growth.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9"><div class="empty">No growth opportunities yet. Add expansion plays as you identify them.</div></td></tr>';
+      return;
+    }
+    state.growth.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      GROWTH_FIELDS.forEach(f => {
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+        div.className = 'editable';
+        div.contentEditable = 'true';
+        div.textContent = row[f] || '';
+        div.addEventListener('input', () => { row[f] = div.textContent; saveState(); });
+        td.appendChild(div);
+        tr.appendChild(td);
+      });
+      const actionTd = document.createElement('td');
+      actionTd.className = 'row-actions';
+      actionTd.innerHTML = '<button class="icon-btn" title="Remove">×</button>';
+      actionTd.querySelector('button').addEventListener('click', () => {
+        if (confirm('Remove this opportunity?')) {
+          state.growth.splice(idx, 1);
+          saveState(); renderGrowth();
+        }
+      });
+      tr.appendChild(actionTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addGrowth() {
+    const blank = {};
+    GROWTH_FIELDS.forEach(f => blank[f] = '');
+    state.growth.push(blank);
+    saveState();
+    renderGrowth();
+  }
+
+  // ============== NOTES ==============
+  function renderNotes() {
+    const container = document.getElementById('notes-timeline');
+    container.innerHTML = '';
+    if (state.notes.length === 0) {
+      container.innerHTML = '<div class="empty">No notes yet. Log meeting takeaways, debriefs, and key conversations here.</div>';
+      return;
+    }
+    state.notes.forEach((row, idx) => {
+      const entry = document.createElement('div');
+      entry.className = 'timeline-entry';
+
+      const head = document.createElement('div');
+      head.className = 'te-head';
+
+      const dateInput = document.createElement('input');
+      dateInput.type = 'date';
+      dateInput.className = 'te-date';
+      dateInput.value = row.date || '';
+      dateInput.addEventListener('input', () => { row.date = dateInput.value; saveState(); });
+      head.appendChild(dateInput);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'icon-btn';
+      removeBtn.innerHTML = '×';
+      removeBtn.title = 'Remove';
+      removeBtn.addEventListener('click', () => {
+        if (confirm('Remove this note?')) {
+          state.notes.splice(idx, 1);
+          saveState(); renderNotes();
+        }
+      });
+      head.appendChild(removeBtn);
+      entry.appendChild(head);
+
+      const titleField = document.createElement('div');
+      const titleLbl = document.createElement('label');
+      titleLbl.textContent = 'Title / Type';
+      titleLbl.style.cssText = 'font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); font-weight: 600;';
+      const titleInput = document.createElement('div');
+      titleInput.className = 'editable';
+      titleInput.contentEditable = 'true';
+      titleInput.textContent = row.title || '';
+      titleInput.dataset.placeholder = 'e.g., QBR with Sean C. and Gary M.';
+      titleInput.style.cssText = 'font-weight: 600; font-size: 14px;';
+      titleInput.addEventListener('input', () => { row.title = titleInput.textContent; saveState(); });
+      titleField.appendChild(titleLbl);
+      titleField.appendChild(titleInput);
+      entry.appendChild(titleField);
+
+      const noteField = document.createElement('div');
+      noteField.style.marginTop = '8px';
+      const noteLbl = document.createElement('label');
+      noteLbl.textContent = 'Notes';
+      noteLbl.style.cssText = 'font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); font-weight: 600;';
+      const noteInput = document.createElement('textarea');
+      noteInput.className = 'editable';
+      noteInput.value = row.notes || '';
+      noteInput.style.minHeight = '60px';
+      noteInput.placeholder = 'What was discussed, decisions, follow-ups...';
+      noteInput.addEventListener('input', () => { row.notes = noteInput.value; saveState(); });
+      noteField.appendChild(noteLbl);
+      noteField.appendChild(noteInput);
+      entry.appendChild(noteField);
+
+      const linkField = document.createElement('div');
+      linkField.style.marginTop = '8px';
+      const linkLbl = document.createElement('label');
+      linkLbl.textContent = 'Links (presentation, debrief, email, etc.)';
+      linkLbl.style.cssText = 'font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); font-weight: 600;';
+      const linkInput = document.createElement('div');
+      linkInput.className = 'editable';
+      linkInput.contentEditable = 'true';
+      linkInput.textContent = row.links || '';
+      linkInput.dataset.placeholder = 'Paste URLs or file paths';
+      linkInput.style.fontSize = '13px';
+      linkInput.addEventListener('input', () => { row.links = linkInput.textContent; saveState(); });
+      linkField.appendChild(linkLbl);
+      linkField.appendChild(linkInput);
+      entry.appendChild(linkField);
+
+      container.appendChild(entry);
+    });
+  }
+
+  function addNote() {
+    state.notes.unshift({
+      date: new Date().toISOString().slice(0,10),
+      title: '',
+      notes: '',
+      links: ''
+    });
+    saveState();
+    renderNotes();
+  }
+
+  // ============== EXPORT / IMPORT / RESET ==============
+  function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const acct = (state.fields.account_name || 'account_plan').replace(/[^a-z0-9]+/gi, '_');
+    a.href = url;
+    a.download = `${acct}_account_plan.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          state = Object.assign(defaultState(), data);
+          saveState();
+          renderAll();
+          alert('Plan imported.');
+        } catch (err) {
+          alert('Could not parse file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    });
+    input.click();
+  }
+
+  function resetAll() {
+    if (!confirm('Reset everything? This will clear all fields in this template.')) return;
+    state = defaultState();
+    saveState();
+    renderAll();
+  }
+
+  // ============== INIT ==============
+  function renderAll() {
+    bindFieldEditables();
+    renderStakeholders();
+    renderEngagements();
+    renderVoc();
+    renderSwot();
+    renderGrowth();
+    renderNotes();
+  }
+
+  renderAll();
+</script>
+
+</body>
+</html>
